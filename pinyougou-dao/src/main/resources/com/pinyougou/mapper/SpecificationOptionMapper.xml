@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pinyougou.mapper.SpecificationOptionMapper">
+    <sql id="Base_Column_List">
+        id, option_name optionName, spec_id specId, orders
+    </sql>
+    <select id="selectPage" parameterType="com.pinyougou.pojo.SpecificationOption" resultType="com.pinyougou.pojo.SpecificationOption">
+      select
+        <include refid="Base_Column_List"/>
+      from tb_specification
+        <where>
+            <if test="specName != null and specName != '' ">
+                and spec_name like '${specName}'
+            </if>
+        </where>
+    </select>
+
+    <select id="selectOne" parameterType="long" resultType="com.pinyougou.pojo.SpecificationOption">
+        select
+          <include refid="Base_Column_List"/>
+        from tb_specification_option where id = #{id};
+    </select>
+
+    <select id="selectBySpecId" parameterType="long" resultType="com.pinyougou.pojo.SpecificationOption">
+        select
+          <include refid="Base_Column_List"/>
+        from tb_specification_option where spec_id = #{id}
+    </select>
+
+    <insert id="insertSpecificationOption" parameterType="list">
+          insert into tb_specification_option (id, option_name, spec_id, orders) values
+        <foreach collection="list" item="s" separator=",">
+            (#{s.id}, #{s.optionName}, #{s.specId}, #{s.orders})
+        </foreach>
+    </insert>
+
+    <delete id="deleteSpecificationOption" parameterType="long[]">
+        delete from tb_specification where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteBySpecId" parameterType="long">
+        delete from tb_specification_option where spec_id = #{id}
+    </delete>
+</mapper>

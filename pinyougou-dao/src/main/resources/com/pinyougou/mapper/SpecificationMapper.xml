@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pinyougou.mapper.SpecificationMapper">
+    <sql id="Base_Column_List">
+        id, spec_name specName
+    </sql>
+    <select id="selectPage" parameterType="entity.PageParameter" resultType="com.pinyougou.pojo.Specification">
+      select
+        <include refid="Base_Column_List"/>
+      from tb_specification
+        <where>
+            <if test="specName != null and specName != '' ">
+                and spec_name like '${specName}'
+            </if>
+        </where>
+    </select>
+
+    <select id="selectOne" parameterType="long" resultType="com.pinyougou.pojo.Specification">
+        select
+          <include refid="Base_Column_List"/>
+        from tb_specification where id = #{id};
+    </select>
+
+    <select id="selectSpecList" resultType="java.util.Map">
+        select id, spec_name text from tb_specification;
+    </select>
+
+    <insert id="insertSpecification" parameterType="com.pinyougou.pojo.Specification">
+        <selectKey resultType="long" order="AFTER" keyProperty="id">
+            select LAST_INSERT_ID() as id
+        </selectKey>
+
+        insert into tb_specification
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">
+                id,
+            </if>
+            <if test="specName != null and specName != ''">
+                spec_name,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">
+                #{id},
+            </if>
+            <if test="specName != null and specName != ''">
+                #{specName},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateSpecification" parameterType="com.pinyougou.pojo.Specification">
+        update tb_type_template
+          <if test="specName != null and specName != ''">
+              spec_name = #{specName}
+          </if>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSpecification">
+        delete from tb_specification where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

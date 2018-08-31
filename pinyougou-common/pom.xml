@@ -11,5 +11,11 @@
 
     <artifactId>pinyougou-common</artifactId>
 
-
+   <dependencies>
+       <dependency>
+           <groupId>com.alibaba</groupId>
+           <artifactId>fastjson</artifactId>
+           <version>1.2.28</version>
+       </dependency>
+   </dependencies>
 </project>

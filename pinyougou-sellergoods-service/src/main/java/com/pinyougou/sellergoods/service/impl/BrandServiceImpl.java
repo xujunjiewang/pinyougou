@@ -10,6 +10,9 @@ import entity.PageParameter;
 import entity.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+import java.util.Map;
+
 
 @Service
 public class BrandServiceImpl implements BrandService {
@@ -19,9 +22,38 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public PageResult findPage(PageParameter<Brand> pageParameter) {
-        PageHelper.startPage(pageParameter.getPage(), pageParameter.getSize());  //分页
-        Page<Brand> page = (Page<Brand>) brandMapper.findPage(pageParameter);
+        //分页
+        PageHelper.startPage(pageParameter.getPage(), pageParameter.getSize());
+        Page<Brand> page = (Page<Brand>) brandMapper.selectPage(pageParameter);
 
         return new PageResult(page.getTotal(), page.getResult());
     }
+
+    @Override
+    public void saveBrand(Brand brand) {
+        brandMapper.insertBrand(brand);
+    }
+
+    @Override
+    public Brand findOne(Long id) {
+        return brandMapper.selectOne(id);
+    }
+
+    @Override
+    public void modifyBrand(Brand brand) {
+        brandMapper.updateBrand(brand);
+    }
+
+    @Override
+    public void removeOne(Long[] ids) {
+        for(Long id : ids) {
+            brandMapper.deleteOne(id);
+        }
+    }
+
+    @Override
+    public List<Map> findBrandList() {
+        return brandMapper.selectBrandList();
+    }
+
 }
